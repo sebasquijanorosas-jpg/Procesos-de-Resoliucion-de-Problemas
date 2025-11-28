@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Resolución de Problemas ITIL</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .case-study {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .case-study h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .case-study p {
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .itil-phases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .phase {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .phase:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .phase h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .phase p {
+            color: #666;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .input-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .results {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-section h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .result-section ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .result-section ul li {
+            margin-bottom: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-high {
+            background: #fee;
+            color: #c33;
+        }
+
+        .status-medium {
+            background: #ffeaa7;
+            color: #d63031;
+        }
+
+        .status-low {
+            background: #dfe6e9;
+            color: #2d3436;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Sistema de Resolución de Problemas ITIL</h1>
+            <p>Automatización del Proceso de Problem Management</p>
+        </div>
+
+        <div class="content">
+            <div class="case-study">
+                <h2>📋 Caso Práctico: E-Commerce GlobalShop</h2>
+                <p><strong>Situación:</strong> GlobalShop es una plataforma de comercio electrónico que ha experimentado múltiples incidentes de lentitud en su sistema de pagos durante las últimas 3 semanas, especialmente durante las horas pico (6pm-9pm). Los usuarios reportan timeouts y carritos de compra que se vacían aleatoriamente.</p>
+                <p><strong>Impacto:</strong> 15% de abandono adicional en el proceso de checkout, pérdida estimada de $50,000 por semana.</p>
+                <p><strong>Incidentes relacionados:</strong> INC-001 a INC-045 (45 incidentes en 3 semanas)</p>
+            </div>
+
+            <div class="itil-phases">
+                <div class="phase">
+                    <h3>1️⃣ Detección</h3>
+                    <p>Identificación del problema mediante análisis de tendencias de incidentes recurrentes</p>
+                </div>
+                <div class="phase">
+                    <h3>2️⃣ Registro</h3>
+                    <p>Documentación formal del problema con todos los detalles relevantes</p>
+                </div>
+                <div class="phase">
+                    <h3>3️⃣ Categorización</h3>
+                    <p>Clasificación por impacto, urgencia y área afectada</p>
+                </div>
+                <div class="phase">
+                    <h3>4️⃣ Priorización</h3>
+                    <p>Asignación de prioridad basada en impacto al negocio</p>
+                </div>
+                <div class="phase">
+                    <h3>5️⃣ Investigación</h3>
+                    <p>Análisis de causa raíz mediante técnicas especializadas</p>
+                </div>
+                <div class="phase">
+                    <h3>6️⃣ Solución</h3>
+                    <p>Implementación de cambios para resolver la causa raíz</p>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <h3>🤖 Sistema Automatizado de Análisis</h3>
+                <div id="problemForm">
+                    <div class="form-group">
+                        <label>Descripción del Problema:</label>
+                        <textarea id="description" placeholder="Describa el problema detectado...">Sistema de pagos lento con timeouts frecuentes durante horas pico</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Categoría:</label>
+                        <select id="category">
+                            <option value="infraestructura">Infraestructura</option>
+                            <option value="aplicacion" selected>Aplicación</option>
+                            <option value="red">Red</option>
+                            <option value="base-datos">Base de Datos</option>
+                            <option value="seguridad">Seguridad</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Impacto:</label>
+                        <select id="impact">
+                            <option value="alto" selected>Alto - Afecta a múltiples usuarios</option>
+                            <option value="medio">Medio - Afecta a un grupo específico</option>
+                            <option value="bajo">Bajo - Afecta a usuarios individuales</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Número de Incidentes Relacionados:</label>
+                        <input type="number" id="incidents" value="45" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Frecuencia:</label>
+                        <select id="frequency">
+                            <option value="diaria" selected>Diaria</option>
+                            <option value="semanal">Semanal</option>
+                            <option value="mensual">Mensual</option>
+                            <option value="ocasional">Ocasional</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn" id="analyzeBtn" onclick="analyzeProblm()">🚀 Analizar y Generar Solución</button>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 20px; color: #667eea; font-weight: 600;">Analizando problema con motor ITIL...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+                <p id="loadingText" style="margin-top: 10px; color: #666; font-size: 0.9em;">Iniciando análisis...</p>
+            </div>
+
+            <div class="results" id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        const analysisEngine = {
+            aplicacion: {
+                causas: [
+                    "Consultas SQL no optimizadas que generan bloqueos en la base de datos",
+                    "Código de la aplicación con memory leaks que consume RAM progresivamente",
+                    "Ausencia de caché para consultas frecuentes al procesador de pagos",
+                    "Sesiones de usuario sin timeout definido ocupando recursos del servidor"
+                ],
+                soluciones: [
+                    "Implementar índices en tablas de transacciones y optimizar queries más lentas",
+                    "Realizar profiling de memoria y corregir referencias circulares en el código",
+                    "Configurar Redis/Memcached para cachear respuestas del gateway de pagos",
+                    "Implementar auto-scaling horizontal basado en CPU/RAM durante horas pico",
+                    "Actualizar librerías de pago a versiones más recientes y estables"
+                ],
+                workarounds: [
+                    "Incrementar temporalmente recursos de servidor (CPU +50%, RAM +30%)",
+                    "Implementar cola de procesamiento con límite de 100 transacciones concurrentes",
+                    "Activar CDN para recursos estáticos y reducir carga en servidor principal"
+                ],
+                prevencion: [
+                    "Implementar monitoreo APM (Application Performance Monitoring) con alertas",
+                    "Establecer pruebas de carga automáticas antes de cada deployment",
+                    "Crear dashboard en tiempo real de métricas de rendimiento del checkout",
+                    "Documentar capacidad máxima y planificar escalamiento automático"
+                ]
+            },
+            infraestructura: {
+                causas: [
+                    "Capacidad insuficiente del servidor para manejar picos de tráfico",
+                    "Configuración inadecuada de balanceador de carga",
+                    "Discos con alta latencia afectando I/O de base de datos",
+                    "Red interna con cuellos de botella entre servidores"
+                ],
+                soluciones: [
+                    "Migrar a arquitectura cloud con auto-scaling (AWS/Azure/GCP)",
+                    "Implementar CDN global para distribuir contenido estático",
+                    "Actualizar a discos SSD NVMe para reducir latencia de I/O",
+                    "Configurar balanceador con algoritmo least-connections",
+                    "Separar servidores de aplicación y base de datos"
+                ],
+                workarounds: [
+                    "Añadir 2 servidores adicionales temporalmente durante horas pico",
+                    "Programar tareas pesadas fuera del horario crítico",
+                    "Limitar funcionalidades no críticas durante alta demanda"
+                ],
+                prevencion: [
+                    "Implementar monitoreo de capacidad con alertas al 70% de uso",
+                    "Realizar auditorías de infraestructura trimestrales",
+                    "Mantener 30% de capacidad de reserva para crecimiento inesperado",
+                    "Documentar arquitectura y plan de disaster recovery"
+                ]
+            },
+            "base-datos": {
+                causas: [
+                    "Queries N+1 generando miles de consultas innecesarias",
+                    "Falta de índices en columnas frecuentemente consultadas",
+                    "Transacciones largas bloqueando tablas críticas",
+                    "Base de datos sin particionar con tablas de millones de registros"
+                ],
+                soluciones: [
+                    "Implementar ORM con eager loading para evitar queries N+1",
+                    "Crear índices compuestos en columnas de búsqueda frecuente",
+                    "Refactorizar transacciones largas en operaciones atómicas más pequeñas",
+                    "Implementar particionamiento horizontal por fecha en tablas históricas",
+                    "Configurar read replicas para distribuir carga de consultas"
+                ],
+                workarounds: [
+                    "Implementar caché de consultas con TTL de 5 minutos",
+                    "Ejecutar mantenimiento de índices durante horario de baja demanda",
+                    "Limitar queries a los últimos 90 días de datos"
+                ],
+                prevencion: [
+                    "Implementar slow query log con análisis automático semanal",
+                    "Establecer políticas de code review enfocadas en eficiencia de queries",
+                    "Realizar pruebas de carga específicas para base de datos",
+                    "Mantener documentación actualizada del schema y optimizaciones"
+                ]
+            },
+            red: {
+                causas: [
+                    "Saturación del ancho de banda durante horas pico",
+                    "Latencia elevada en conexión con proveedor de pagos",
+                    "Firewall con reglas ineficientes causando overhead",
+                    "DNS con tiempos de resolución elevados"
+                ],
+                soluciones: [
+                    "Actualizar ancho de banda contratado de 1Gbps a 10Gbps",
+                    "Implementar conexión directa (Direct Connect) con gateway de pagos",
+                    "Optimizar reglas de firewall y migrar a WAF cloud",
+                    "Configurar DNS autoritativo con Anycast para baja latencia",
+                    "Implementar QoS para priorizar tráfico de transacciones"
+                ],
+                workarounds: [
+                    "Comprimir respuestas HTTP con gzip/brotli",
+                    "Implementar lazy loading de imágenes y recursos no críticos",
+                    "Usar DNS resolver local con caché"
+                ],
+                prevencion: [
+                    "Monitoreo de ancho de banda con alertas al 80% de uso",
+                    "Pruebas de latencia automatizadas cada hora a servicios críticos",
+                    "Implementar redundancia de conexiones con ISP secundario",
+                    "Mantener diagrama de red actualizado y documentado"
+                ]
+            },
+            seguridad: {
+                causas: [
+                    "Ataques DDoS consumiendo recursos del servidor",
+                    "Validaciones excesivas de seguridad ralentizando transacciones",
+                    "Certificados SSL expirando o mal configurados",
+                    "Logs de auditoría sin rotación llenando disco"
+                ],
+                soluciones: [
+                    "Implementar Cloudflare o AWS Shield para mitigación DDoS",
+                    "Optimizar validaciones de seguridad con caché de sesiones",
+                    "Automatizar renovación de certificados SSL con Let's Encrypt",
+                    "Configurar rotación automática de logs y envío a SIEM",
+                    "Implementar rate limiting por IP y por sesión"
+                ],
+                workarounds: [
+                    "Activar modo 'Under Attack' en WAF temporalmente",
+                    "Implementar CAPTCHA en páginas de login durante ataques",
+                    "Limpiar logs manualmente y comprimir archivos históricos"
+                ],
+                prevencion: [
+                    "Realizar pentesting trimestral con equipo externo",
+                    "Implementar sistema de detección de anomalías basado en ML",
+                    "Mantener WAF rules actualizadas con últimas vulnerabilidades",
+                    "Capacitar equipo en mejores prácticas de seguridad mensualmente"
+                ]
+            }
+        };
+
+        function analyzeProblm() {
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const progressBar = document.getElementById('progressBar');
+            const loadingText = document.getElementById('loadingText');
+            const btn = document.getElementById('analyzeBtn');
+            
+            btn.disabled = true;
+            loading.classList.add('show');
+            results.classList.remove('show');
+            
+            const description = document.getElementById('description').value;
+            const category = document.getElementById('category').value;
+            const impact = document.getElementById('impact').value;
+            const incidents = parseInt(document.getElementById('incidents').value);
+            const frequency = document.getElementById('frequency').value;
+
+            const steps = [
+                'Detectando patrones en incidentes...',
+                'Analizando causa raíz...',
+                'Evaluando impacto al negocio...',
+                'Generando soluciones...',
+                'Creando plan de acción...',
+                'Finalizando análisis...'
+            ];
+
+            let currentStep = 0;
+            
+            const interval = setInterval(() => {
+                if (currentStep < steps.length) {
+                    progressBar.style.width = ((currentStep + 1) / steps.length * 100) + '%';
+                    loadingText.textContent = steps[currentStep];
+                    currentStep++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        const analysis = generateAnalysis(description, category, impact, incidents, frequency);
+                        displayResults(analysis, description, category, impact);
+                        loading.classList.remove('show');
+                        btn.disabled = false;
+                    }, 500);
+                }
+            }, 800);
+        }
+
+        function generateAnalysis(description, category, impact, incidents, frequency) {
+            const template = analysisEngine[category];
+            const problemId = 'PRB-' + Math.floor(Math.random() * 9000 + 1000);
+            
+            let priority = 'Baja';
+            if (impact === 'alto' && (frequency === 'diaria' || incidents > 30)) {
+                priority = 'Alta';
+            } else if (impact === 'medio' || incidents > 15) {
+                priority = 'Media';
+            }
+
+            let timeEstimate = '2-3 días';
+            if (priority === 'Alta') {
+                timeEstimate = '24-48 horas';
+            } else if (priority === 'Media') {
+                timeEstimate = '3-5 días';
+            } else {
+                timeEstimate = '1-2 semanas';
+            }
+
+            return {
+                problema_registrado: problemId,
+                prioridad: priority,
+                analisis_causa_raiz: template.causas,
+                solucion_propuesta: template.soluciones,
+                workaround_temporal: template.workarounds,
+                prevencion_futura: template.prevencion,
+                rfc_sugerido: `RFC para ${category}: Implementar optimizaciones identificadas en el análisis de causa raíz. Incluye mejoras de rendimiento, monitoreo avanzado y medidas preventivas. Requiere aprobación del Change Advisory Board (CAB).`,
+                tiempo_estimado: timeEstimate
+            };
+        }
+
+        function displayResults(analysis, description, category, impact) {
+            const results = document.getElementById('results');
+            
+            const priorityClass = analysis.prioridad === 'Alta' ? 'status-high' : 
+                                 analysis.prioridad === 'Media' ? 'status-medium' : 'status-low';
+            
+            results.innerHTML = `
+                <h3 style="color: #667eea; margin-bottom: 20px;">📊 Resultados del Análisis Automatizado ITIL</h3>
+                
+                <div class="result-section">
+                    <h4>🎫 Información del Problema</h4>
+                    <p><strong>ID del Problema:</strong> ${analysis.problema_registrado}</p>
+                    <p><strong>Descripción:</strong> ${description}</p>
+                    <p><strong>Categoría:</strong> ${category.charAt(0).toUpperCase() + category.slice(1)}</p>
+                    <p><strong>Impacto:</strong> ${impact.charAt(0).toUpperCase() + impact.slice(1)}</p>
+                    <span class="status-badge ${priorityClass}">Prioridad: ${analysis.prioridad}</span>
+                </div>
+
+                <div class="result-section">
+                    <h4>🔍 Análisis de Causa Raíz (RCA)</h4>
+                    <p style="margin-bottom: 10px;"><em>Causas identificadas mediante análisis sistemático:</em></p>
+                    <ul>
+                        ${analysis.analisis_causa_raiz.map(causa => `<li>${causa}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="result-section">
+                    <h4>✅ Solución Definitiva Propuesta</h4>
+                    <p style="margin-bottom: 10px;"><em>Plan de acción para resolver el problema de raíz:</em></p>
+                    <ul>
+                        ${analysis.solucion_propuesta.map((paso, index) => `<li><strong>Paso ${index + 1}:</strong> ${paso}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="result-section">
+                    <h4>🚑 Workaround Temporal</h4>
+                    <p style="margin-bottom: 10px;"><em>Acciones inmediatas para mitigar el impacto mientras se implementa la solución:</em></p>
+                    <ul>
+                        ${analysis.workaround_temporal.map(accion => `<li>${accion}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="result-section">
+                    <h4>🛡️ Medidas de Prevención Futura</h4>
+                    <p style="margin-bottom: 10px;"><em>Acciones para evitar la recurrencia del problema:</em></p>
+                    <ul>
+                        ${analysis.prevencion_futura.map(medida => `<li>${medida}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="result-section">
+                    <h4>📝 Request for Change (RFC) Sugerido</h4>
+                    <p style="margin-bottom: 10px;">${analysis.rfc_sugerido}</p>
+                    <p><strong>⏱️ Tiempo Estimado de Implementación:</strong> ${analysis.tiempo_estimado}</p>
+                    <p><strong>👥 Roles Involucrados:</strong> Problem Manager, Change Manager, Equipo Técnico, CAB</p>
+                    <p><strong>📋 Próximos Pasos:</strong></p>
+                    <ul style="margin-top: 10px;">
+                        <li>Documentar Known Error en la Knowledge Base</li>
+                        <li>Crear RFC formal para aprobación del CAB</li>
+                        <li>Programar ventana de mantenimiento</li>
+                        <li>Preparar plan de rollback</li>
+                        <li>Comunicar a stakeholders afectados</li>
+                    </ul>
+                </div>
+            `;
+            
+            results.classList.add('show');
+        }
+    </script>
+</body>
+</html>
